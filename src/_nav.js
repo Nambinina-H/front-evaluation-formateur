@@ -17,20 +17,41 @@ import {
   cilSpeedometer,
   cilSpreadsheet,
   cilStar,
+  cilPeople,
+  cilDescription,
+  cilViewQuilt,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react-pro'
 import { Translation } from 'react-i18next'
 
 const _nav = [
+  // {
+  //   component: CNavItem,
+  //   name: <Translation>{(t) => t('dashboard')}</Translation>,
+  //   to: '/dashboard',
+  //   icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+  //   badge: {
+  //     color: 'info-gradient',
+  //     text: 'NEW',
+  //   },
+  // },
   {
     component: CNavItem,
-    name: <Translation>{(t) => t('dashboard')}</Translation>,
+    name: <Translation>{(t) => t('Dashboard')}</Translation>,
     to: '/dashboard',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    badge: {
-      color: 'info-gradient',
-      text: 'NEW',
-    },
+    icon: <CIcon icon={cilViewQuilt} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: <Translation>{(t) => t('Evaluation')}</Translation>,
+    to: '/2',
+    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: <Translation>{(t) => t('Gestion Utilisateurs')}</Translation>,
+    to: '/3',
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,

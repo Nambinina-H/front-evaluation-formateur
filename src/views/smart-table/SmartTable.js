@@ -11,13 +11,11 @@ const SmartTable = () => {
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
-          <CCardHeader>
-            <strong>CoreUI Smart Table</strong> <small>React Table Component</small>
+          <CCardHeader className="text-center">
+            <strong>Liste Utilisateur</strong> 
           </CCardHeader>
           <CCardBody>
-            <DocsExample href="components/smart-table/">
               <SmartTableBasixExample />
-            </DocsExample>
           </CCardBody>
         </CCard>
         <CCard className="mb-4">

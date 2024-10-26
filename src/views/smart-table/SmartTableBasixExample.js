@@ -1,40 +1,44 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { CBadge, CButton, CCardBody, CCollapse, CSmartTable } from '@coreui/react-pro'
-
-import data from './_data.js'
+import { getData } from '../../services/apiService' // Import the getData function
 
 const SmartTableBasicExample = () => {
   const [details, setDetails] = useState([])
+  const [data, setData] = useState([]) // State to store fetched data
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getData('utilisateur/utilisateurs/')
+        setData(response)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   const columns = [
-    {
-      key: 'name',
-      _style: { width: '40%' },
-    },
-    'registered',
-    { key: 'role', _style: { width: '20%' } },
-    { key: 'status', _style: { width: '20%' } },
+    { key: 'nom', label: 'Nom', _style: { width: '20%' } },
+    { key: 'prenom', label: 'Prénom', _style: { width: '20%' } },
+    { key: 'email', label: 'Email', _style: { width: '20%' } },
+    { key: 'tel', label: 'Téléphone', _style: { width: '15%' } },
+    { key: 'type', label: 'Type', _style: { width: '10%' } },
+    { key: 'is_active', label: 'Statut', _style: { width: '10%' } },
     {
       key: 'show_details',
       label: '',
-      _style: { width: '1%' },
+      _style: { width: '5%' },
       filter: false,
       sorter: false,
     },
   ]
-  const getBadge = (status) => {
-    switch (status) {
-      case 'Active':
-        return 'success'
-      case 'Inactive':
-        return 'secondary'
-      case 'Pending':
-        return 'warning'
-      case 'Banned':
-        return 'danger'
-      default:
-        return 'primary'
-    }
+
+  const getBadge = (isActive) => {
+    return isActive ? 'success' : 'secondary'
   }
+
   const toggleDetails = (index) => {
     const position = details.indexOf(index)
     let newDetails = details.slice()
@@ -48,15 +52,14 @@ const SmartTableBasicExample = () => {
 
   return (
     <CSmartTable
-      sorterValue={{ column: 'name', state: 'asc' }}
+      sorterValue={{ column: 'nom', state: 'asc' }}
       clickableRows
       tableProps={{
         striped: true,
         hover: true,
       }}
       activePage={3}
-      footer
-      items={data}
+      items={data} // Use fetched data
       columns={columns}
       columnFilter
       tableFilter
@@ -65,10 +68,15 @@ const SmartTableBasicExample = () => {
       itemsPerPage={5}
       columnSorter
       pagination
+      itemsPerPageLabel="Éléments par page" // Translate "Items per page" to French
+      paginationProps={{
+        align: 'center', // Center the pagination
+        style: { marginLeft: '250px' }, // Add margin to the right
+      }}
       scopedColumns={{
-        status: (item) => (
+        is_active: (item) => (
           <td>
-            <CBadge color={getBadge(item.status)}>{item.status}</CBadge>
+        <CBadge color={getBadge(item.is_active)}>{item.is_active ? 'Active' : 'Inactive'}</CBadge>
           </td>
         ),
         show_details: (item) => {
@@ -92,8 +100,19 @@ const SmartTableBasicExample = () => {
           return (
             <CCollapse visible={details.includes(item.id)}>
               <CCardBody>
-                <h4>{item.username}</h4>
-                <p className="text-body-secondary">User since: {item.registered}</p>
+                <h4>{item.pseudo}</h4>
+                <p className="text-body-secondary">Email: {item.email}</p>
+                <p className="text-body-secondary">Téléphone: {item.tel}</p>
+                <p className="text-body-secondary">Matricule: {item.matricule}</p>
+                <p className="text-body-secondary">Type: {item.type}</p>
+                {item.details && (
+                  <>
+                    <p className="text-body-secondary">Niveau: {item.details.niveau}</p>
+                    {item.details.carte_etudiant && (
+                      <p className="text-body-secondary">Carte Étudiant: <a href={item.details.carte_etudiant}>Voir</a></p>
+                    )}
+                  </>
+                )}
                 <CButton size="sm" color="info">
                   User Settings
                 </CButton>

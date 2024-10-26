@@ -50,7 +50,7 @@ const _nav = [
   {
     component: CNavItem,
     name: <Translation>{(t) => t('Gestion Utilisateurs')}</Translation>,
-    to: '/3',
+    to: '/smart-table',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
   },
   {

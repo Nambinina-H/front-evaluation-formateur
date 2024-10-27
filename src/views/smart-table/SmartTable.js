@@ -14,7 +14,11 @@ const SmartTable = () => {
             <strong>Liste Utilisateur</strong> 
           </CCardHeader>
           <CCardBody>
+            <div className="table-responsive">
+              {/* Ajoutez ici vos composants de table */}
               <SmartTableBasixExample />
+              <SmartTableSelectableExample />
+            </div>
           </CCardBody>
         </CCard>
       </CCol>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { CBadge, CButton, CCardBody, CCollapse, CSmartTable } from '@coreui/react-pro'
+import { CBadge, CButton, CCardBody, CCollapse, CSmartTable, CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter } from '@coreui/react-pro'
 import { getData, deleteData } from '../../services/apiService' // Import the getData and deleteData functions
 import CIcon from '@coreui/icons-react'
 import { cilTrash } from '@coreui/icons'
@@ -8,6 +8,8 @@ const SmartTableBasicExample = () => {
   const [details, setDetails] = useState([])
   const [data, setData] = useState([]) // State to store fetched data
   const [currentItems, setCurrentItems] = useState([]) // State to store current items for CSV export
+  const [visible, setVisible] = useState(false) // State to manage modal visibility
+  const [userIdToDelete, setUserIdToDelete] = useState(null) // State to store the user ID to be deleted
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,14 +61,22 @@ const SmartTableBasicExample = () => {
     console.log('Create User button clicked')
   }
 
-  const handleDeleteUser = async (id) => {
+  const handleDeleteUser = (id) => {
+    setUserIdToDelete(id)
+    setVisible(true)
+  }
+
+  const confirmDeleteUser = async () => {
     try {
-      await deleteData(`utilisateur/utilisateurs/delete/${id}/`)
-      setData(data.filter(user => user.id !== id))
-      setCurrentItems(currentItems.filter(user => user.id !== id))
-      console.log('Delete User button clicked for user id:', id)
+      await deleteData(`utilisateur/utilisateurs/delete/${userIdToDelete}/`)
+      setData(data.filter(user => user.id !== userIdToDelete))
+      setCurrentItems(currentItems.filter(user => user.id !== userIdToDelete))
+      console.log('Delete User button clicked for user id:', userIdToDelete)
     } catch (error) {
       console.error('Error deleting user:', error)
+    } finally {
+      setVisible(false)
+      setUserIdToDelete(null)
     }
   }
 
@@ -170,6 +180,27 @@ const SmartTableBasicExample = () => {
           },
         }}
       />
+      <CModal
+        alignment="center"
+        visible={visible}
+        onClose={() => setVisible(false)}
+        aria-labelledby="VerticallyCenteredExample"
+      >
+        <CModalHeader>
+          <CModalTitle id="VerticallyCenteredExample" className="w-100 text-center">Confirmation de suppression</CModalTitle>
+        </CModalHeader>
+        <CModalBody className="w-100 text-center">
+          Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setVisible(false)}>
+            Annuler
+          </CButton>
+          <CButton color="danger" onClick={confirmDeleteUser}>
+            Supprimer
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </>
   )
 }
